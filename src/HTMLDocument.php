@@ -60,7 +60,7 @@ class HTMLDocument extends DOMDocument
         }
     }
 
-    public static function fromHTML(string $html, bool $middleware = true, $options = 0, $libNoImplied = true): HTMLDocument
+    public static function fromHTML(string $html, bool $middleware = true, int $options = 0, bool $libNoImplied = true): HTMLDocument
     {
         $dom = new HTMLDocument();
 
@@ -118,7 +118,7 @@ class HTMLDocument extends DOMDocument
         return $this->loadHTML(file_get_contents($filename), $options);
     }
 
-    public function saveHTMLFile($filename): int|false
+    public function saveHTMLFile(string $filename): int|false
     {
         if (! is_writable($filename)) {
             return false;
@@ -134,7 +134,7 @@ class HTMLDocument extends DOMDocument
         return $bytesWritten;
     }
 
-    public function loadHTML(string $source, int $options = 0, $libNoImplied = true): bool
+    public function loadHTML(string $source, int $options = 0, bool $libNoImplied = true): bool
     {
         foreach ($this->middleware as $middleware) {
             if (method_exists($middleware, 'beforeLoadHTML')) {
