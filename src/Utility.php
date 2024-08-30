@@ -23,6 +23,10 @@ class Utility
 
     public static function attribute(string $attributeName, mixed $value = null): string
     {
+        if ($attributeName === 'class') {
+            return $attributeName . '="' . Utility::arrayToCssClasses($value) . '"';
+        }
+
         if (is_array($value)) {
             return $attributeName . '="' . htmlspecialchars(join(' ', $value)) . '"';
         }
@@ -36,6 +40,22 @@ class Utility
         }
 
         return $attributeName . '="' . htmlspecialchars($value) . '"';
+    }
+
+    /** Conditionally compile classes from an array into a CSS class list. */
+    public static function arrayToCssClasses(array $classList): string
+    {
+        $classes = [];
+
+        foreach ($classList as $class => $constraint) {
+            if (is_numeric($class)) {
+                $classes[] = $constraint;
+            } elseif ($constraint) {
+                $classes[] = $class;
+            }
+        }
+
+        return implode(' ', $classes);
     }
 
     /**

@@ -65,4 +65,10 @@ class UtilityTest extends TestCase
     {
         $this->assertEquals(2, Utility::countRootNodes('<input><button></button>'));
     }
+
+    /** @test */
+    public function can_handle_conditional_css_classes_in_associative_array()
+    {
+        $this->assertEquals('foo bar', Utility::arrayToCssClasses(['foo', 'bar' => true, 'baz' => false]));
+    }
 }
