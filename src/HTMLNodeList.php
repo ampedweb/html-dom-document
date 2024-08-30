@@ -20,10 +20,7 @@ class HTMLNodeList extends DOMNodeList implements IteratorAggregate, ArrayAccess
     /**
      * @psalm-suppress NonInvariantPropertyType
      *
-     * @deprecated Cannot be overridden due to DOMNodeList's readonly quriks, so should be avoided. Use the count() method instead.
-     *
-     * @todo Find a way to set the length of the list in the constructor
-     * (unfortunately it's readonly but can't be set due to DOMNodeList's instantiation quirks).
+     * @deprecated Cannot be overridden due to DOMNodeList's readonly quirks, so should be avoided. Use the count() method instead.
      */
     public int $length;
 

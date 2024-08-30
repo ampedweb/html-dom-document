@@ -111,7 +111,7 @@ class HTMLDocument extends DOMDocument
         return $dom;
     }
 
-    public function loadHTMLFile(string $filename, int $options = 0)
+    public function loadHTMLFile(string $filename, int $options = 0): bool
     {
         return $this->loadHTML(file_get_contents($filename), $options);
     }
