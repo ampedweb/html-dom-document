@@ -35,7 +35,6 @@ class HTMLDocument extends DOMDocument
     use HasCssQuerySelectors;
     use HasXPathQuerySelectors;
     use CanManipulateDocument;
-    use CanCompareDocument;
 
     /** @var AbstractMiddleware[] */
     private array $middleware = [];
