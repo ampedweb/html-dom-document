@@ -53,6 +53,9 @@ class HTMLDocument extends DOMDocument
         $this->middleware[] = new Middleware\WrapDefaultHTML($this);
         $this->middleware[] = new Middleware\InjectDefaultDoctype($this);
         $this->middleware[] = new Middleware\TrimHTML($this);
+        $this->middleware[] = new Middleware\NamespacedTagNames($this);
+        $this->middleware[] = new Middleware\CustomVoidTags($this);
+
         foreach (['template', 'script', 'style', 'textarea'] as $tag) {
             $this->middleware[] = new Middleware\IgnoreHTMLTag($this, $tag);
         }
