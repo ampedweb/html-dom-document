@@ -5,10 +5,11 @@ namespace Future\HTMLDocument\Tests\HTMLDocument\Middleware;
 use Future\HTMLDocument\HTMLDocument;
 use Future\HTMLDocument\Middleware\CustomVoidTags;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class CustomVoidTagsTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function custom_void_tags_on_input_are_void_on_output()
     {
         $html = '<html><head></head><body><void-tag /><not-a-void-tag></not-a-void-tag></body></html>';

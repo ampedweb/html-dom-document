@@ -6,10 +6,11 @@ use Future\HTMLDocument\HTMLDocument;
 use Future\HTMLDocument\Middleware\CustomVoidTags;
 use Future\HTMLDocument\Middleware\NamespacedTagNames;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class NamespacedTagNamesTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function namespaced_tag_names_keep_their_namespace()
     {
         $originalHtml = '<html><head></head><body><esi:include src="..." /></body></html>';
@@ -22,7 +23,7 @@ class NamespacedTagNamesTest extends TestCase
         $this->assertSame($expectedHtml, $dom->saveHTML());
     }
 
-    /** @test */
+    #[Test]
     public function void_namespaced_tag_names_keep_their_namespace_and_are_output_as_void_elements()
     {
         $html = '<html><head></head><body><esi:include src="..." /></body></html>';

@@ -5,10 +5,11 @@ namespace Future\HTMLDocument\Tests\HTMLDocument\Middleware;
 use Future\HTMLDocument\HTMLDocument;
 use Future\HTMLDocument\HTMLElement;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class HasCssQuerySelectorsTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function documents_can_extract_with_css_query_selectors()
     {
         $dom = HTMLDocument::loadFromFile(__DIR__ . '/../fixtures/example.html');

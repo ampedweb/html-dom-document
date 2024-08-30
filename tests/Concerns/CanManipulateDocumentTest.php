@@ -4,10 +4,11 @@ namespace Future\HTMLDocument\Tests\HTMLDocument\Middleware;
 
 use Future\HTMLDocument\HTMLDocument;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class CanManipulateDocumentTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_remove_selectors()
     {
         $dom = HTMLDocument::loadFromFile(__DIR__ . '/../fixtures/example.html');
@@ -17,7 +18,7 @@ class CanManipulateDocumentTest extends TestCase
         $this->assertCount(0, $dom->querySelectorAll('li')->toArray());
     }
 
-    /** @test */
+    #[Test]
     public function can_remove_comments()
     {
         $dom = HTMLDocument::loadFromFile(__DIR__ . '/../fixtures/example.html');
