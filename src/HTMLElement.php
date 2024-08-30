@@ -60,6 +60,38 @@ class HTMLElement extends DOMElement
         return parent::setAttribute($qualifiedName, $value);
     }
 
+    public function addAttribute(string $attribute, string $value): void
+    {
+        if ($this->hasAttribute($attribute)) {
+            $value = $this->getAttribute($attribute) . ' ' . $value;
+        }
+
+        $this->setAttribute($attribute, $value);
+    }
+
+    public function removeAttribute(string $qualifiedName, ?string $value = null): bool
+    {
+        if (! $this->hasAttribute($qualifiedName)) {
+            return false;
+        }
+
+        if ($value === null) {
+            return parent::removeAttribute($qualifiedName);
+        }
+
+        $existingAttributeValues = explode(' ', $this->getAttribute($qualifiedName));
+
+        $newAttributeValues = array_filter($existingAttributeValues, fn ($item) => $item !== $value);
+
+        if (empty($newAttributeValues)) {
+            return parent::removeAttribute($qualifiedName);
+        }
+
+        $this->setAttribute($qualifiedName, implode(' ', $newAttributeValues));
+
+        return true;
+    }
+
     public function hasClass(string $class): bool
     {
         return in_array($class, $this->getClassList());
@@ -80,35 +112,24 @@ class HTMLElement extends DOMElement
 
     public function removeClass(string $class): void
     {
-        $classes = $this->getClassList();
-
-        if (! in_array($class, $classes, true)) {
-            return;
-        }
-
-        $classes = array_filter($classes, function ($item) use ($class) {
-            return $item !== $class;
-        });
-
-        if (empty($classes)) {
-            $this->removeAttribute('class');
-        } else {
-            $this->setAttribute('class', implode(' ', $classes));
-        }
+        $this->removeAttribute('class', $class);
     }
 
-    public function toggleAttribute(string $name): void
+    public function toggleAttribute(string $qualifiedName, ?bool $force = null): bool
     {
-        if ($this->hasAttribute($name)) {
-            $this->removeAttribute($name);
-        } else {
-            $this->setAttribute($name, '');
-        }
+        match (true) {
+            $force === true => $this->setAttribute($qualifiedName, ''),
+            $force === false => $this->removeAttribute($qualifiedName),
+            $this->hasAttribute($qualifiedName) => $this->removeAttribute($qualifiedName),
+            ! $this->hasAttribute($qualifiedName) => $this->setAttribute($qualifiedName, ''),
+        };
+
+        return $this->hasAttribute($qualifiedName);
     }
 
     public function isVoidElement(): bool
     {
-        return in_array($this->nodeName, ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
+        return in_array($this->nodeName, ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr']) || $this->hasAttribute('data-is-void-element');
     }
 
     public function getOuterHTML(): string
@@ -182,9 +203,12 @@ class HTMLElement extends DOMElement
         return $this;
     }
 
-    /**
-     * @return string[]
-     */
+    public function isTextNode(): bool
+    {
+        return $this->nodeType === XML_TEXT_NODE;
+    }
+
+    /** @return string[] */
     public function getAttributes(): array
     {
         $attributes = [];

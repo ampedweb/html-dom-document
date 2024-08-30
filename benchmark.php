@@ -8,7 +8,7 @@ function benchmark(string $message, callable $callback): void
 {
     $startTime = microtime(true);
 
-    for ($i = 0; $i < 1_000_000; $i++) {
+    for ($i = 0; $i < 100_000; $i++) {
         $callback();
     }
 
@@ -22,12 +22,13 @@ $html = '<html><body><div>test</div></body></html>';
 benchmark('Plain DOMDocument', function () use ($html) {
     $dom = new DOMDocument();
     $dom->loadHTML($html);
+    $dom->saveHTML();
 });
 
 benchmark('HTMLDocument with no middleware', function () use ($html) {
-    HTMLDocument::fromHTML($html, false);
+    HTMLDocument::fromHTML($html, false)->saveHTML();
 });
 
 benchmark('HTMLDocument with all middleware', function () use ($html) {
-    HTMLDocument::fromHTML($html);
+    HTMLDocument::fromHTML($html)->saveHTML();
 });

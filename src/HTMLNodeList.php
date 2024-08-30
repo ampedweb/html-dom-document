@@ -20,10 +20,7 @@ class HTMLNodeList extends DOMNodeList implements IteratorAggregate, ArrayAccess
     /**
      * @psalm-suppress NonInvariantPropertyType
      *
-     * @deprecated Cannot be overridden due to DOMNodeList's readonly quriks, so should be avoided. Use the count() method instead.
-     *
-     * @todo Find a way to set the length of the list in the constructor
-     * (unfortunately it's readonly but can't be set due to DOMNodeList's instantiation quirks).
+     * @deprecated Cannot be overridden due to DOMNodeList's readonly quirks, so should be avoided. Use the count() method instead.
      */
     public int $length;
 
@@ -33,9 +30,8 @@ class HTMLNodeList extends DOMNodeList implements IteratorAggregate, ArrayAccess
         $this->elements = $elements;
     }
 
-    public static function fromDOMNodeList(DOMNodeList $list, HTMLDocument $dom = null): HTMLNodeList
+    public static function fromDOMNodeList(DOMNodeList $list, HTMLDocument $dom = new HTMLDocument()): HTMLNodeList
     {
-        $dom ??= new HTMLDocument();
         $nodes = [];
 
         /** @var DOMNode[] $list */
@@ -57,6 +53,16 @@ class HTMLNodeList extends DOMNodeList implements IteratorAggregate, ArrayAccess
         }
 
         return new HTMLNodeList($nodes);
+    }
+
+    public static function fromString(string $html, HTMLDocument $dom = new HTMLDocument()): HTMLNodeList
+    {
+        $dom->loadHTML(Utility::wrap($html));
+
+        return HTMLNodeList::fromDOMNodeList(
+            $dom->getElementsByTagName(Utility::WRAPPING_TAG)->item(0)->childNodes,
+            clone $dom,
+        );
     }
 
     public function count(): int

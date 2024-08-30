@@ -2,11 +2,13 @@
 
 namespace Future\HTMLDocument;
 
-use DOMDocument;
 use DOMNode;
+use Future\HTMLDocument\Middleware\WrapDefaultHTML;
 
 class Utility
 {
+    public const WRAPPING_TAG = 'wrap-for-multiple-root-nodes';
+
     /** Turn an array into a string of HTML attributes. */
     public static function attributes(array $attributes): string
     {
@@ -21,6 +23,10 @@ class Utility
 
     public static function attribute(string $attributeName, mixed $value = null): string
     {
+        if ($attributeName === 'class') {
+            return $attributeName . '="' . Utility::arrayToCssClasses($value) . '"';
+        }
+
         if (is_array($value)) {
             return $attributeName . '="' . htmlspecialchars(join(' ', $value)) . '"';
         }
@@ -34,6 +40,22 @@ class Utility
         }
 
         return $attributeName . '="' . htmlspecialchars($value) . '"';
+    }
+
+    /** Conditionally compile classes from an array into a CSS class list. */
+    public static function arrayToCssClasses(array $classList): string
+    {
+        $classes = [];
+
+        foreach ($classList as $class => $constraint) {
+            if (is_numeric($class)) {
+                $classes[] = $constraint;
+            } elseif ($constraint) {
+                $classes[] = $class;
+            }
+        }
+
+        return implode(' ', $classes);
     }
 
     /**
@@ -72,10 +94,45 @@ class Utility
      */
     public static function countRootNodes(string $html): int
     {
-        $dom = new DOMDocument();
-        $fragment = $dom->createDocumentFragment();
-        $fragment->appendXML($html);
+        return HTMLNodeList::fromString(
+            $html,
+            (new HTMLDocument())->withoutMiddleware(WrapDefaultHTML::class),
+        )->count();
+    }
 
-        return $fragment->childNodes->length;
+    public static function wrap(string $html): string
+    {
+        $tag = Utility::WRAPPING_TAG;
+
+        return "<{$tag}>{$html}</{$tag}>";
+    }
+
+    public static function unwrap(string $html): string
+    {
+        $html = trim($html);
+        $tag = Utility::WRAPPING_TAG;
+        $startingTag = "<{$tag}>";
+        $endingTag = "</{$tag}>";
+
+        if (! str_starts_with($html, $startingTag) || ! str_ends_with($html, $endingTag)) {
+            return $html;
+        }
+
+        return substr($html, strlen($startingTag), -strlen($endingTag));
+    }
+
+    public static function nodeContainsNode(DOMNode $parentNode, DOMNode $childNode): bool
+    {
+        if ($parentNode === $childNode) {
+            return true;
+        }
+
+        foreach ($parentNode->childNodes as $child) {
+            if ($child === $childNode || Utility::nodeContainsNode($child, $childNode)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

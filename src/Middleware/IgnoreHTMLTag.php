@@ -4,6 +4,11 @@ namespace Future\HTMLDocument\Middleware;
 
 use Future\HTMLDocument\HTMLDocument;
 
+/**
+ * Replace the given tag with a <template> tag temporarily, removing
+ * its contents from the DOM in order to speed up DOMDocument
+ * processing, until it is saved to a string again.
+ */
 class IgnoreHTMLTag extends AbstractMiddleware
 {
     protected array $replacements = [];

@@ -53,12 +53,16 @@ class HTMLDocument extends DOMDocument
         $this->middleware[] = new Middleware\WrapDefaultHTML($this);
         $this->middleware[] = new Middleware\InjectDefaultDoctype($this);
         $this->middleware[] = new Middleware\TrimHTML($this);
+        $this->middleware[] = new Middleware\NamespacedTagNames($this);
+        $this->middleware[] = new Middleware\CustomVoidTags($this);
+        $this->middleware[] = new Middleware\AtAttributes($this);
+
         foreach (['template', 'script', 'style', 'textarea'] as $tag) {
             $this->middleware[] = new Middleware\IgnoreHTMLTag($this, $tag);
         }
     }
 
-    public static function fromHTML(string $html, bool $middleware = true, $options = 0, $libNoImplied = true): HTMLDocument
+    public static function fromHTML(string $html, bool $middleware = true, int $options = 0, bool $libNoImplied = true): HTMLDocument
     {
         $dom = new HTMLDocument();
 
@@ -78,9 +82,19 @@ class HTMLDocument extends DOMDocument
         return $this;
     }
 
-    public function withoutMiddleware(): HTMLDocument
+    /** @param ?class-string $middleware */
+    public function withoutMiddleware(?string $middlewareToRemove = null): HTMLDocument
     {
-        $this->middleware = [];
+        if ($middlewareToRemove === null) {
+            $this->middleware = [];
+
+            return $this;
+        }
+
+        $this->middleware = array_filter(
+            $this->middleware,
+            fn (AbstractMiddleware $middleware) => ! $middleware instanceof $middlewareToRemove,
+        );
 
         return $this;
     }
@@ -101,12 +115,12 @@ class HTMLDocument extends DOMDocument
         return $dom;
     }
 
-    public function loadHTMLFile(string $filename, int $options = 0)
+    public function loadHTMLFile(string $filename, int $options = 0): bool
     {
         return $this->loadHTML(file_get_contents($filename), $options);
     }
 
-    public function saveHTMLFile($filename): int|false
+    public function saveHTMLFile(string $filename): int|false
     {
         if (! is_writable($filename)) {
             return false;
@@ -122,7 +136,7 @@ class HTMLDocument extends DOMDocument
         return $bytesWritten;
     }
 
-    public function loadHTML(string $source, int $options = 0, $libNoImplied = true): bool
+    public function loadHTML(string $source, int $options = 0, bool $libNoImplied = true): bool
     {
         foreach ($this->middleware as $middleware) {
             if (method_exists($middleware, 'beforeLoadHTML')) {
