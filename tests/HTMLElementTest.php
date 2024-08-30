@@ -216,4 +216,17 @@ class HTMLElementTest extends TestCase
         </div>
         HTML, $element->__toString());
     }
+
+    #[Test]
+    public function attributes_can_be_removed()
+    {
+        $element = HTMLElement::fromHTML('<div id="one" class="two three"></div>');
+        $this->assertEquals('<div id="one" class="two three"></div>', $element->saveHTML());
+
+        $element->removeAttribute('id');
+        $this->assertEquals('<div class="two three"></div>', $element->saveHTML());
+
+        $element->removeAttribute('class', 'two');
+        $this->assertEquals('<div class="three"></div>', $element->saveHTML());
+    }
 }

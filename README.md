@@ -1,20 +1,14 @@
-# A drop-in replacement for DOMDocument that handles HTML5 documents gracefully
+# HTML5 DOM Document
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/futureplc/html-dom-document.svg?style=flat-square)](https://packagist.org/packages/futureplc/html-dom-document)
 [![Tests](https://img.shields.io/github/actions/workflow/status/futureplc/html-dom-document/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/futureplc/html-dom-document/actions/workflows/run-tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/futureplc/html-dom-document.svg?style=flat-square)](https://packagist.org/packages/futureplc/html-dom-document)
 
-The HTMLDocument package has one primary purpose: to act as a stand-in replacement for the `DOMDocument` and related DOM classes that come with PHP's core libxml extension.
+The HTMLDocument package has one primary purpose: to act as a stand-in replacement for the core `DOMDocument` and related DOM classes that come with PHP.
 
-> [!] There are other, recommended ways if you're writing new code to parse HTML content and don't need a drop-in replacement for `DOMDocument`, such as for a legacy application.
-> Instead, onsider using a package like the [Symfony DOM Crawler component].
+> ⚠️ If you just need to crawl the DOM and not manipulate it in-place, consider using a package like the [Symfony DOM Crawler component](https://symfony.com/doc/current/components/dom_crawler.html).
 
-While the DOM-related classes with PHP are a great way to parse XML, they quickly fall apart when trying to parse HTML. The main problems are:
-
-- libxml, and `DOMDocument` as a result, are not well-suited to parsing HTML5, as HTML5 is not necessarily valid XML. It can work with HTML5 just fine, but it needs a bit of finessing to get it working correctly
-- The interfaces are not very intuitive, often requiring 5+ lines of code to perform simple operations like making an instance of a `DOMElement`
-- The interface is inundated with legacy techniques, such as falsey return values on failures instead of sensible defaults, which makes it challenging to use alongside static analysis tools
-- There are a lot of features missing that people working with HTML often use nowadays, such as querying with CSS selectors, manipulating attributes and equivalents of some JavaScript functions to get commonly needed things like `innerHTML` and `outerHTML`
+While the builtin DOM-related classes with PHP are a great way to parse XML, they quickly fall apart when trying to parse modern HTML5 markup. This package makes it more intuitive to work with, and handles some of the quirks behind-the-scenes.
 
 This package provides a series of classes to replace the DOM ones in a backward-compatible fashion but with a tighter interface and additional utilities bundled in to make working with HTML a breeze. These classes will return instances of the equivalent `HTML*` class instead of the `DOM*` one:
 
@@ -73,8 +67,9 @@ These middleware do various things, such as:
 - Ignoring LibXML errors (as LibXML complains about certain HTML5 tags even though it can parse them properly)
 - Treating `<template>` and `<script>` tags as verbatim so their contents aren't changed by the rest of the document
 
-These will be enabled by default if you use the `HTMLDocument` class, but you can disable them if you like by calling the `withoutMiddleware()` method before loading the HTML.
-Easily get the HTML string back.
+These will be enabled by default if you use the `HTMLDocument` class, but you can disable them as needed.
+- Calling `->withoutMiddleware()` without any arguments before loading the HTML will result in no middleware applying, essentially resulting in just the additional utility methods with none of the extra HTML5 support
+- Calling `->withoutMiddleware(MiddlewareName::class)`, using the class name of a middleware, will disable that specific one
 
 Getting a plain HTML string back out of `DOMDocument` can be a bit tricky if you need something specific like a specific element, so we have added some options to make it easier.
 
@@ -96,17 +91,57 @@ If you need to know whether you're working with an HTML5 document or not, the `i
 $dom->isHtml5(); // true
 ```
 
+### Void elements
+
 If working with HTML5, you may want to know if a given node is a "void element", meaning it needs no closing tag. This can be checked with the `isVoidElement()` method.
 
 ```php
 $element->isVoidElement(); // true
 ```
 
+Normally when saving the HTML, `DOMDocument` would output void elements as `<example></example>`, but this package will output them as `<example>`, even for custom elements, maintaining how they were input originally.
+
+### Working with attributes
+
+The `HTMLElement` class has a series of methods to help you work with attributes on elements.
+
+```php
+$element->getAttributes(); // Returns an array of all attributes
+$element->getAttribute('class'); // Returns the value of the class attribute
+
+$element->setAttribute('class', 'foo'); // Sets the class attribute to "foo"
+$element->addAttribute('class', 'foo'); // Adds the "foo" value as a space-separated value to the class attribute, appending it if the attribute already exists
+
+$element->removeAttribute('ref'); // Removes the ref attribute entirely
+$element->removeAttribute('ref', 'noreferrer'); // Removes the "noreferrer" value from the ref attribute if it exists - if the attribute is now empty, it will be removed entirely
+
+$element->toggleAttribute('checked'); // Toggles the "checked" attribute
+```
+
+As we often work with CSS classes in HTML, there are also some methods to help with this.
+
+```php
+$element->getClassList(); // Returns an array of CSS classes
+$element->setClassList(['foo', 'bar']); // Sets the CSS classes
+$element->hasClass('foo'); // Returns true if the element has the class "foo"
+$element->addClass('baz'); // Adds the class "baz"
+$element->removeClass('bar'); // Removes the class "bar"
+```
+
+### Removing parts of a document
+
+There are some helpful utilities for quickly removing parts of a document as required.
+
+```php
+$element->wihoutSelector('p'); // Removes all child `<p>` element
+$element->withoutComments(); // Removes all HTML comments
+```
+
 ### Utility methods
 
 There are a couple of additional utility methods to help build attribute strings from PHP arrays.
 
-`Utility::attribute()` will take a single key/value pair and turn it into an HTML attribute, regardless of whether the value is a string, array, or boolean.
+`Utility::attribute()` will take a single key/value pair and turn it into an HTML attribute, regardless of whether the value is a string, array, or boolean. A boolean value can be used to conditionally add attributes.
 
 ```php
 Utility::attribute('class', ['foo', 'bar']); // class="foo bar"
@@ -121,6 +156,7 @@ Utility::attributes([
     'class' => ['foo', 'bar'],
     'id' => 'baz',
     'required' => true,
+    'checked' => false,
 ]);
 
 // class="foo bar" id="baz" required
@@ -132,6 +168,8 @@ This is also available on `HTMLElement` and `HTMLDocument` objects through the `
 
 ```php
 $dom = HTMLDocument::fromHTML('<p><span>foo</span></p>');
+
+// Make sure every element has a class of "bar"
 $dom->mapRecursive(function ($node) {
     if ($node instanceof HTMLElement) {
         $node->setAttribute('class', 'bar');
@@ -140,6 +178,15 @@ $dom->mapRecursive(function ($node) {
 
 // <p class="bar"><span class="bar">foo</span></p>
 ```
+
+`Utility::countRootNodes()` will tell you how many root nodes are in a document.
+
+```php
+Utility::countRootNodes('<p>foo</p>'); // 1
+Utility::countRootNodes('<p>foo</p><p>bar</p>'); // 2
+```
+
+If working with source HTML that contains multiple root nodes, you can use the `Utility::wrap($html)` and `Utility::unwrap($html)` methods to ensure a single root node or remove the root node, respectively.
 
 ### Working with CSS classes
 
@@ -171,10 +218,10 @@ $dom->querySelector('head > title'); // Returns the first `<title>` element
 $dom->querySelectorAll('.foo'); // Returns all elements with the class `foo`
 ```
 
-If you still need to work with XPath, there's now a convenient `query()` method available on both `HTMLDocument` and `HTMLElement` classes.
+If you still need to work with XPath, there is a convenient `xpath()` method on both `HTMLDocument` and `HTMLElement` classes.
 
 ```php
-$dom->query('//a'); // Returns all `<a>` elements
+$dom->xpath('//a'); // Returns all `<a>` elements
 ```
 
 ### Working with text nodes

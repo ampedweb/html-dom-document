@@ -13,6 +13,8 @@ class HasXPathQuerySelectorsTest extends TestCase
     {
         $dom = HTMLDocument::loadFromFile(__DIR__ . '/../fixtures/example.html');
 
+        $this->assertSame('Meta title', $dom->xpath('//title')->item(0)->textContent);
         $this->assertSame('Meta title', $dom->query('//title')->item(0)->textContent);
+        $this->assertSame('Meta title', $dom->evaluate('//title')->item(0)->textContent);
     }
 }

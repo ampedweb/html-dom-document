@@ -8,7 +8,7 @@ trait CanManipulateDocument
 {
     abstract public function querySelectorAll(string $cssSelector): HTMLNodeList;
 
-    abstract public function query(string $xpathSelector): HTMLNodeList;
+    abstract public function xpath(string $xpathSelector): HTMLNodeList;
 
     public function withoutSelector(string $cssSelector): static
     {
@@ -25,7 +25,7 @@ trait CanManipulateDocument
 
     public function withoutComments(): static
     {
-        $comments = $this->query('//comment()');
+        $comments = $this->xpath('//comment()');
 
         foreach ($comments as $comment) {
             if (! empty($comment->parentNode)) {
