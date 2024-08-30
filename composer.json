@@ -30,9 +30,10 @@
         "ext-dom": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.3.2",
+        "phpunit/phpunit": "^11.3.1",
         "friendsofphp/php-cs-fixer": "^3.21.1",
-        "spatie/ray": "^1.28"
+        "spatie/ray": "^1.28",
+        "ext-libxml": "*"
     },
     "autoload": {
         "psr-4": {

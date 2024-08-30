@@ -5,10 +5,11 @@ namespace Future\HTMLDocument\Tests\HTMLDocument;
 use Future\HTMLDocument\HTMLElement;
 use Future\HTMLDocument\HTMLText;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class HTMLTextTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_replace_text_with_node()
     {
         $element = HTMLElement::fromHTML('<div></div>');

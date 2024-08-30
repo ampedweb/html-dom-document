@@ -5,10 +5,11 @@ namespace Future\HTMLDocument\Tests\HTMLDocument\Middleware;
 use Future\HTMLDocument\HTMLDocument;
 use Future\HTMLDocument\Middleware\IgnoreHTMLTag;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class IgnoreHTMLTagTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function template_replacement()
     {
         $html = '<div><p>First</p><template class="testing"><p>Inside</p></template><p>Second</p></div>';
@@ -22,7 +23,7 @@ class IgnoreHTMLTagTest extends TestCase
         $this->assertSame($html, $dom->withMiddleware($middleware)->saveHTML());
     }
 
-    /** @test */
+    #[Test]
     public function script_replacement()
     {
         $html = '<script src="foo"></script>';

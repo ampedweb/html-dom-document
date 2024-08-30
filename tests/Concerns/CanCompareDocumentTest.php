@@ -4,11 +4,12 @@ namespace Future\HTMLDocument\Tests\HTMLDocument\Middleware;
 
 use Future\HTMLDocument\HTMLDocument;
 use Future\HTMLDocument\HTMLElement;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class CanCompareDocumentTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_tell_if_one_node_contains_another_node()
     {
         $dom = HTMLDocument::loadFromFile(__DIR__ . '/../fixtures/example.html');
