@@ -12,6 +12,7 @@ class CustomVoidTags extends AbstractMiddleware
         return (string) preg_replace_callback('/<([a-zA-Z0-9\-]+)([^>]*)\/>/i', function ($matches) {
             $tagName = $matches[1];
             $attributes = $matches[2];
+
             return "<$tagName$attributes data-is-void-tag=\"true\"></$tagName>";
         }, $source);
     }
@@ -21,6 +22,7 @@ class CustomVoidTags extends AbstractMiddleware
         return (string) preg_replace_callback('/<([a-zA-Z0-9\-]+)([^>]*) data-is-void-tag="true"><\/\1>/i', function ($matches) {
             $tagName = $matches[1];
             $attributes = $matches[2];
+
             return "<$tagName$attributes />";
         }, $source);
     }
