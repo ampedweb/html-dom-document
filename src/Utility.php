@@ -101,7 +101,7 @@ class Utility
         return substr($html, strlen($startingTag), -strlen($endingTag));
     }
 
-    public static function nodeContainsNode(DOMNode $parentNode, DOMNode $childNode)
+    public static function nodeContainsNode(DOMNode $parentNode, DOMNode $childNode): bool
     {
         if ($parentNode === $childNode) {
             return true;
