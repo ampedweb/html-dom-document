@@ -3,11 +3,12 @@
 namespace Future\HTMLDocument\Tests\HTMLDocument;
 
 use Future\HTMLDocument\HTMLElement;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class HTMLElementTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_be_created_from_string()
     {
         $element = HTMLElement::fromHTML('<div>Hello</div>');
@@ -16,18 +17,18 @@ class HTMLElementTest extends TestCase
         $this->assertEquals('<div>Hello</div>', $element->saveHTML());
     }
 
-    /** @test */
+    #[Test]
     public function get_class_list()
     {
         $element = HTMLElement::fromHTML('<div></div>');
         $element->setAttribute('class', 'hello world');
 
-        $this->assertEquals(2, count($element->getClassList()));
+        $this->assertCount(2, $element->getClassList());
         $this->assertSame('hello', $element->getClassList()[0]);
         $this->assertSame('world', $element->getClassList()[1]);
     }
 
-    /** @test */
+    #[Test]
     public function can_set_class_list()
     {
         $element = HTMLElement::fromHTML('<div></div>');
@@ -36,7 +37,7 @@ class HTMLElementTest extends TestCase
         $this->assertEquals('foo bar baz', $element->getAttribute('class'));
     }
 
-    /** @test */
+    #[Test]
     public function can_add_to_class_list()
     {
         $element = HTMLElement::fromHTML('<div></div>');
@@ -51,7 +52,7 @@ class HTMLElementTest extends TestCase
         $this->assertEquals('foo bar baz', $element->getAttribute('class'));
     }
 
-    /** @test */
+    #[Test]
     public function can_remove_from_class_list()
     {
         $element = HTMLElement::fromHTML('<div class="foo bar"></div>');
@@ -65,7 +66,7 @@ class HTMLElementTest extends TestCase
         $this->assertFalse($element->hasAttribute('class'));
     }
 
-    /** @test */
+    #[Test]
     public function can_set_array_attributes()
     {
         $element = HTMLElement::fromHTML('<div></div>');
@@ -74,7 +75,7 @@ class HTMLElementTest extends TestCase
         $this->assertEquals('foo bar baz', $element->getAttribute('class'));
     }
 
-    /** @test */
+    #[Test]
     public function knows_about_void_elements()
     {
         $this->assertTrue((new HTMLElement('br'))->isVoidElement());
@@ -88,7 +89,7 @@ class HTMLElementTest extends TestCase
         $this->assertFalse((new HTMLElement('something-weird'))->isVoidElement());
     }
 
-    /** @test */
+    #[Test]
     public function boolean_attributes_can_be_toggled()
     {
         $element = HTMLElement::fromHTML('<input>');
@@ -105,7 +106,7 @@ class HTMLElementTest extends TestCase
         $this->assertEquals('<input>', $element->saveHTML());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_outer_html()
     {
         $this->assertEquals(
@@ -129,7 +130,7 @@ class HTMLElementTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_inner_html()
     {
         $this->assertEquals(
@@ -158,7 +159,7 @@ class HTMLElementTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function canSaveItsOwnHTML()
     {
         $this->assertEquals(
@@ -172,13 +173,13 @@ class HTMLElementTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function canBeCastToString()
     {
         $this->assertEquals('<div>This is a <strong>test!</strong></div>', (string) HTMLElement::fromHTML('<div>This is a <strong>test!</strong></div>'));
     }
 
-    /** @test */
+    #[Test]
     public function canGetAttributesAsArray()
     {
         $this->assertEmpty(HTMLElement::fromHTML('<div></div>')->getAttributes());
@@ -186,7 +187,7 @@ class HTMLElementTest extends TestCase
         $this->assertEquals(['id' => 'one', 'class' => 'two three'], HTMLElement::fromHTML('<div id="one" class="two three"></div>')->getAttributes());
     }
 
-    /** @test */
+    #[Test]
     public function canMapRecursively()
     {
         $element = HTMLElement::fromHTML(<<<HTML
@@ -216,7 +217,7 @@ class HTMLElementTest extends TestCase
         HTML, $element->__toString());
     }
 
-    /** @test */
+    #[Test]
     public function attributes_can_be_removed()
     {
         $element = HTMLElement::fromHTML('<div id="one" class="two three"></div>');

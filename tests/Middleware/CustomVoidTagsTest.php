@@ -3,19 +3,19 @@
 namespace Future\HTMLDocument\Tests\HTMLDocument\Middleware;
 
 use Future\HTMLDocument\HTMLDocument;
-use Future\HTMLDocument\Middleware\AtAttributes;
+use Future\HTMLDocument\Middleware\CustomVoidTags;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-class AtAttributesTest extends TestCase
+class CustomVoidTagsTest extends TestCase
 {
     #[Test]
-    public function at_attributes_get_kept_in_saved_html()
+    public function custom_void_tags_on_input_are_void_on_output()
     {
-        $html = '<html><head></head><body><button @click="doSomething">Click me</button></body></html>';
+        $html = '<html><head></head><body><void-tag /><not-a-void-tag></not-a-void-tag></body></html>';
 
         $dom = (new HTMLDocument())->withoutMiddleware();
-        $dom->withMiddleware(new AtAttributes($dom));
+        $dom->withMiddleware(new CustomVoidTags($dom));
         $dom->loadHTML($html);
 
         $this->assertSame($html, $dom->saveHTML());

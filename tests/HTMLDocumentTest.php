@@ -5,11 +5,12 @@ namespace Future\HTMLDocument\Tests\HTMLDocument;
 use DOMDocument;
 use Future\HTMLDocument\HTMLDocument;
 use Future\HTMLDocument\HTMLElement;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class HTMLDocumentTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function elements_can_be_created()
     {
         $dom = HTMLDocument::loadFromFile(__DIR__ . '/fixtures/example.html');
@@ -20,7 +21,7 @@ class HTMLDocumentTest extends TestCase
         $this->assertSame('<h1>New h1 title</h1>', $element->saveHTML());
     }
 
-    /** @test */
+    #[Test]
     public function elements_can_be_created_from_dom_nodes()
     {
         $domDoc = new DOMDocument();
@@ -36,7 +37,7 @@ class HTMLDocumentTest extends TestCase
         $this->assertSame('<h1 id="new-h1">New h1 title</h1>', $htmlElement->saveHTML());
     }
 
-    /** @test */
+    #[Test]
     public function elements_can_be_created_from_strings()
     {
         $htmlDoc = new HTMLDocument();
@@ -48,13 +49,13 @@ class HTMLDocumentTest extends TestCase
         $this->assertSame('<h1 id="new-h1">New h1 title</h1>', $htmlElement->saveHTML());
     }
 
-    /** @test */
+    #[Test]
     public function unloaded_documents_are_not_html5()
     {
         $this->assertFalse((new HTMLDocument())->isHtml5());
     }
 
-    /** @test */
+    #[Test]
     public function can_tell_if_html5_document()
     {
         $this->assertTrue(HTMLDocument::fromHTML('')->isHtml5());
@@ -64,7 +65,7 @@ class HTMLDocumentTest extends TestCase
         $this->assertFalse(HTMLDocument::fromHTML('<!doctype test><html></html>')->isHtml5());
     }
 
-    /** @test */
+    #[Test]
     public function can_load_html_with_multiple_root_nodes()
     {
         $dom = HTMLDocument::fromHTML('<h1>One</h1><h2>Two</h2>Three');

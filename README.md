@@ -238,6 +238,7 @@ $textNode->replaceTextWithNode('example', HTMLElement::fromHTML('<strong>example
 
 `HTMLDocument` also has some other benefits over `DOMDocument`:
 
+- Tags with an XML-style namespace get maintained, whereas `DOMDocument` would typically only keep the last part of the tag name. This is useful when working with standards such as edge-side-includes and have markup such as `<esi:include src="..." />`
 - Attributes starting with `@` get maintained, whereas `DOMDocument` would typically remove them. This is useful when working with HTML that has Alpine.js or Vue.js markup such as `<button @click="doSomething">`
 - Any void tags on the input HTML will also be output as void tags
 
@@ -267,6 +268,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 - [Future PLC](https://github.com/futureplc)
 - [Liam Hammett](https://github.com/imliam)
+- [Chris Powell](https://github.com/ampedweb)
 - [All Contributors](../../contributors)
 
 ## License

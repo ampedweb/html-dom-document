@@ -3,11 +3,12 @@
 namespace Future\HTMLDocument\Tests\HTMLDocument\Middleware;
 
 use Future\HTMLDocument\HTMLDocument;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class HasXPathQuerySelectorsTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function documents_can_extract_with_xpath_selectors()
     {
         $dom = HTMLDocument::loadFromFile(__DIR__ . '/../fixtures/example.html');

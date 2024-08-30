@@ -6,11 +6,12 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use Future\HTMLDocument\Utility;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class UtilityTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function attributes_are_formatted_properly()
     {
         $this->assertSame('foo', Utility::attribute('foo'));
@@ -21,7 +22,7 @@ class UtilityTest extends TestCase
         $this->assertSame('foo="bar"', Utility::attribute('foo', 'bar'));
     }
 
-    /** @test */
+    #[Test]
     public function multiple_attributes_are_formatted_properly()
     {
         $this->assertSame('foo class="bar baz" hello="world"', Utility::attributes([
@@ -31,7 +32,7 @@ class UtilityTest extends TestCase
         ]));
     }
 
-    /** @test */
+    #[Test]
     public function can_map_recursively()
     {
         $dom = new DOMDocument();
@@ -50,7 +51,7 @@ class UtilityTest extends TestCase
         $this->assertEquals("<div><strong>Item 1</strong></div>\n", $dom->saveHTML());
     }
 
-    /** @test */
+    #[Test]
     public function can_count_root_nodes_from_html_string()
     {
         $this->assertEquals(1, Utility::countRootNodes('<div></div>'));
@@ -59,7 +60,7 @@ class UtilityTest extends TestCase
         $this->assertEquals(3, Utility::countRootNodes('Foo<div>Bar</div>Baz'));
     }
 
-    /** @test */
+    #[Test]
     public function can_count_root_nodes_from_html5_void_elements()
     {
         $this->assertEquals(2, Utility::countRootNodes('<input><button></button>'));
