@@ -103,7 +103,7 @@ class HTMLElement extends DOMElement
             $force === true => $this->setAttribute($qualifiedName, ''),
             $force === false => $this->removeAttribute($qualifiedName),
             $this->hasAttribute($qualifiedName) => $this->removeAttribute($qualifiedName),
-            !$this->hasAttribute($qualifiedName) => $this->setAttribute($qualifiedName, ''),
+            ! $this->hasAttribute($qualifiedName) => $this->setAttribute($qualifiedName, ''),
         };
 
         return $this->hasAttribute($qualifiedName);
