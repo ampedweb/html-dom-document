@@ -6,8 +6,8 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use Future\HTMLDocument\Utility;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class UtilityTest extends TestCase
 {

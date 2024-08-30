@@ -4,8 +4,8 @@ namespace Future\HTMLDocument\Tests\HTMLDocument;
 
 use Future\HTMLDocument\HTMLElement;
 use Future\HTMLDocument\HTMLText;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class HTMLTextTest extends TestCase
 {

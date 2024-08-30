@@ -3,8 +3,8 @@
 namespace Future\HTMLDocument\Tests\HTMLDocument;
 
 use Future\HTMLDocument\HTMLElement;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 class HTMLElementTest extends TestCase
 {
