@@ -97,9 +97,21 @@ class HTMLElement extends DOMElement
         }
     }
 
+    public function toggleAttribute(string $qualifiedName, ?bool $force = null): bool
+    {
+        match (true) {
+            $force === true => $this->setAttribute($qualifiedName, ''),
+            $force === false => $this->removeAttribute($qualifiedName),
+            $this->hasAttribute($qualifiedName) => $this->removeAttribute($qualifiedName),
+            !$this->hasAttribute($qualifiedName) => $this->setAttribute($qualifiedName, ''),
+        };
+
+        return $this->hasAttribute($qualifiedName);
+    }
+
     public function isVoidElement(): bool
     {
-        return in_array($this->nodeName, ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
+        return in_array($this->nodeName, ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr']) || $this->hasAttribute('data-is-void-element');
     }
 
     public function getOuterHTML(): string
@@ -173,9 +185,12 @@ class HTMLElement extends DOMElement
         return $this;
     }
 
-    /**
-     * @return string[]
-     */
+    public function isTextNode(): bool
+    {
+        return $this->nodeType === XML_TEXT_NODE;
+    }
+
+    /** @return string[] */
     public function getAttributes(): array
     {
         $attributes = [];

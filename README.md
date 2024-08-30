@@ -96,7 +96,7 @@ If you need to know whether you're working with an HTML5 document or not, the `i
 $dom->isHtml5(); // true
 ```
 
-If working with HTML5, you may want to know if a given node is a "void element," meaning it needs no closing tag. This can be checked with the `isVoidElement()` method.
+If working with HTML5, you may want to know if a given node is a "void element", meaning it needs no closing tag. This can be checked with the `isVoidElement()` method.
 
 ```php
 $element->isVoidElement(); // true
@@ -186,6 +186,12 @@ This is particularly useful if you use the `Utility::nodeMapRecursive()` functio
 ```php
 $textNode->replaceTextWithNode('example', HTMLElement::fromHTML('<strong>example</strong>'));
 ```
+
+### Other Notes
+
+`HTMLDocument` also has some other benefits over `DOMDocument`:
+
+- Any void tags on the input HTML will also be output as void tags
 
 ## Drawbacks
 
