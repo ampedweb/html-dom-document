@@ -191,6 +191,7 @@ $textNode->replaceTextWithNode('example', HTMLElement::fromHTML('<strong>example
 
 `HTMLDocument` also has some other benefits over `DOMDocument`:
 
+- Attributes starting with `@` get maintained, whereas `DOMDocument` would typically remove them. This is useful when working with HTML that has Alpine.js or Vue.js markup such as `<button @click="doSomething">`
 - Any void tags on the input HTML will also be output as void tags
 
 ## Drawbacks
