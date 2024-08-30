@@ -100,4 +100,19 @@ class Utility
 
         return substr($html, strlen($startingTag), -strlen($endingTag));
     }
+
+    public static function nodeContainsNode(DOMNode $parentNode, DOMNode $childNode)
+    {
+        if ($parentNode === $childNode) {
+            return true;
+        }
+
+        foreach ($parentNode->childNodes as $child) {
+            if ($child === $childNode || Utility::nodeContainsNode($child, $childNode)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
