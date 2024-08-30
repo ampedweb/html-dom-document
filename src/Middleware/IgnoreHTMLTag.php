@@ -5,11 +5,9 @@ namespace Future\HTMLDocument\Middleware;
 use Future\HTMLDocument\HTMLDocument;
 
 /**
- * Replace the given tag with a <template> tag temporarily,
- * as DOMDocument will urlencode them by default which is
- * not behaviour we want as <template> tags can be very
- * important in some applications, such as using a
- * mustache-like syntax for Google AMP.
+ * Replace the given tag with a <template> tag temporarily, removing
+ * its contents from the DOM in order to speed up DOMDocument
+ * processing, until it is saved to a string again.
  */
 class IgnoreHTMLTag extends AbstractMiddleware
 {
