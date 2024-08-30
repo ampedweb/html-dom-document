@@ -74,7 +74,7 @@ These middleware do various things, such as:
 - Treating `<template>` and `<script>` tags as verbatim so their contents aren't changed by the rest of the document
 
 These will be enabled by default if you use the `HTMLDocument` class, but you can disable them if you like by calling the `withoutMiddleware()` method before loading the HTML.
-Easily get the HTML string back
+Easily get the HTML string back.
 
 Getting a plain HTML string back out of `DOMDocument` can be a bit tricky if you need something specific like a specific element, so we have added some options to make it easier.
 
@@ -221,6 +221,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 - [Future PLC](https://github.com/futureplc)
 - [Liam Hammett](https://github.com/imliam)
+- [Chris Powell](https://github.com/ampedweb)
 - [All Contributors](../../contributors)
 
 ## License
