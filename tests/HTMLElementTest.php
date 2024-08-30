@@ -23,7 +23,7 @@ class HTMLElementTest extends TestCase
         $element = HTMLElement::fromHTML('<div></div>');
         $element->setAttribute('class', 'hello world');
 
-        $this->assertEquals(2, count($element->getClassList()));
+        $this->assertCount(2, $element->getClassList());
         $this->assertSame('hello', $element->getClassList()[0]);
         $this->assertSame('world', $element->getClassList()[1]);
     }
